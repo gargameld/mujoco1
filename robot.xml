@@ -1,45 +1,40 @@
 <mujoco>
   <worldbody>
     <light diffuse=".5 .5 .5"/>
-    <geom type="plane" size="0.5 0.5 0.005" pos="0 0 0"/>
+    <geom type="plane" size="2 2 0.01" pos="0 0 0"/>
 
-    <body name="chassis" pos="0 0 0.005" euler="0 0 0">
+    <body name="chassis" pos="0 0 1" euler="0 0 0">
       <freejoint/> 
-      <geom type="box" size="0.05 0.05 0.025" pos="0 0 0.05"/>
-      
-      <camera mode="fixed" pos="0 0.05 0.025" euler="90 0 0"/>
-      
-      <body pos="0.06 0.05 0.025">
-        <joint name="fr" type="hinge" pos="0 0 0" axis="1 0 0" damping="0.5"/>
-        <geom type="cylinder" size="0.015 0.01" euler="0 90 0" pos="0 0 0"/>
+
+      <geom type="box" size="0.35 0.5 0.05" pos="0 0 0" mass="10"/>
+
+      <camera mode="fixed" pos="0 0.3 0.2" euler="90 0 0"/>
+
+      <!-- Wheels -->
+      <body pos="0.5 -0.5 -0.1" euler="0 0 -90">
+        <include file="front_right_wheel.xml"/>
       </body>
       
-      <body pos="-0.06 0.05 0.025">
-        <joint name="fl" type="hinge" pos="0 0 0" axis="1 0 0" damping="0.5"/>
-        <geom type="cylinder" size="0.015 0.01" euler="0 90 0" pos="0 0 0"/>
+      <body pos="0.5 0.5 -0.1" euler="0 0 -90">
+        <include file="front_left_wheel.xml"/>
       </body>
       
-      <body pos="0.06 -0.05 0.025">
-        <joint name="br" type="hinge" pos="0 0 0" axis="1 0 0" damping="0.5"/>
-        <geom type="cylinder" size="0.015 0.01" euler="0 90 0" pos="0 0 0"/>
+      <body pos="-0.5 -0.5 -0.1" euler="0 0 -90">
+        <include file="rear_right_wheel.xml"/>
       </body>
       
-      <body pos="-0.06 -0.05 0.025">
-        <joint name="bl" type="hinge" pos="0 0 0" axis="1 0 0" damping="0.5"/>
-        <geom type="cylinder" size="0.015 0.01" euler="0 90 0" pos="0 0 0"/>
+      <body pos="-0.5 0.5 -0.1" euler="0 0 -90">
+        <include file="rear_left_wheel.xml"/>
       </body>
+
     </body>
   </worldbody>
 
-  <equality>
-    <joint joint1="fr" joint2="fl"/>
-    <joint joint1="br" joint2="bl"/>
-  </equality>
-
   <actuator>
-    <motor name="drive_fr" joint="fr" gear="25"/>
-    <motor name="drive_fl" joint="fl" gear="25"/>
-    <motor name="drive_br" joint="br" gear="25"/>
-    <motor name="drive_bl" joint="bl" gear="25"/>
+    <!-- Force motors on wheel rolling joints -->
+    <motor name="motor_fr" joint="R1_fr_wheel_rolling_joint" gear="50"/>
+    <motor name="motor_fl" joint="R1_fl_wheel_rolling_joint" gear="50"/>
+    <motor name="motor_rr" joint="R1_rr_wheel_rolling_joint" gear="50"/>
+    <motor name="motor_rl" joint="R1_rl_wheel_rolling_joint" gear="50"/>
   </actuator>
 </mujoco>

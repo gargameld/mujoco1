@@ -9,22 +9,29 @@ xml_path = os.path.join(curr_dir_path, 'scene.xml')
 model = mujoco.MjModel.from_xml_path(xml_path)
 data = mujoco.MjData(model)
 
+# Motor indices (based on names in XML)
+motor_fr = model.actuator("motor_fr").id
+motor_fl = model.actuator("motor_fl").id
+motor_rr = model.actuator("motor_rr").id
+motor_rl = model.actuator("motor_rl").id
+
 with mujoco.viewer.launch_passive(model, data) as viewer:
-    # Run the simulation loop
     while viewer.is_running():
         step_start = time.time()
 
-        # --- MOVEMENT CONTROLS ---
-        
-      
+        # --- SIDEWAYS RIGHT MOVEMENT ---
+        torque = 0.01  # adjust strength if needed
 
-        # Step the physics
+        data.ctrl[motor_fr] =  torque
+        data.ctrl[motor_fl] = -torque
+        data.ctrl[motor_rr] = -torque
+        data.ctrl[motor_rl] =  torque
+
+        # Step physics
         mujoco.mj_step(model, data)
 
-        # Sync the viewer with the new physics state
         viewer.sync()
 
-        # Try to run in real-time
         time_until_next_step = model.opt.timestep - (time.time() - step_start)
         if time_until_next_step > 0:
             time.sleep(time_until_next_step)
