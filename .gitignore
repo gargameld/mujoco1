@@ -1,0 +1,14 @@
+
+# Ignore the virtual environment
+venv/
+.venv/
+env/
+
+# Ignore the specific MuJoCo folder
+mujoco_mecanum-master/
+
+# Helpful extras for Windows/Mac sync
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
