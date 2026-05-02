@@ -5,7 +5,9 @@
 
     <body name="chassis" pos="0 0 1" euler="0 0 0">
       <freejoint/> 
-
+      <body name = "arm">
+        <include file="arm/mounted_arm.xml"/>
+      </body>
       <geom type="box" size="0.35 0.5 0.05" pos="0 0 0" mass="10"/>
 
       <camera mode="fixed" pos="0 0.3 0.2" euler="90 0 0"/>
