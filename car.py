@@ -2,8 +2,6 @@ import mujoco
 import mujoco.viewer
 import os
 import time
-import math
-from rangefinder import RangefinderReader
 
 from arm_pid_controller import ArmPidController
 from rangefinder import RangefinderReader
@@ -11,7 +9,7 @@ from robot_pose_provider import RobotPoseProvider
 from wheel_driver import WheelController
 
 curr_dir_path = os.path.dirname(__file__)
-xml_path = os.path.join(curr_dir_path, 'scene.xml')
+xml_path = os.path.join(curr_dir_path, 'model', 'scene.xml')
 
 model = mujoco.MjModel.from_xml_path(xml_path)
 data = mujoco.MjData(model)

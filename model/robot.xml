@@ -4,9 +4,10 @@
     <body name="chassis" pos="0 0 0.26" euler="0 0 0">
       <freejoint/> 
       <body name = "arm">
-        <include file="arm/mounted_arm.xml"/>
+        <include file="mounted_arm.xml"/>
       </body>
       <geom type="box" size="0.40 0.5 0.05" pos="0 0 0.14" mass="10"/>
+      <site name="gyro_site" pos="0 0 0.200" size="0.015"/>
       <site name="rear_right" pos="0.405 -0.40 0.14" zaxis="0.707107 -0.707107 0" size="0.01"/>
       <site name="front_right" pos="0.405 0.40 0.14" zaxis="0.707107 0.707107 0" size="0.01"/>
       <site name="rear_left" pos="-0.405 -0.40 0.14" zaxis="-0.707107 -0.707107 0" size="0.01"/>
@@ -43,6 +44,7 @@
     <rangefinder name="rangefinder_rear_left" site="rear_left" cutoff="3" noise="0.005"/>
     <rangefinder name="rangefinder_rear" site="rear" cutoff="3" noise="0.005"/>
     <rangefinder name="rangefinder_front" site="front" cutoff="3" noise="0.005"/>
+    <gyro name="gyro" site="gyro_site" noise="0.001"/>
   </sensor>
 
   <actuator>
@@ -51,6 +53,6 @@
     <motor name="motor_fl" joint="R1_fl_wheel_rolling_joint" gear="10"/>
     <motor name="motor_rr" joint="R1_rr_wheel_rolling_joint" gear="10"/>
     <motor name="motor_rl" joint="R1_rl_wheel_rolling_joint" gear="10"/>
-    <include file="arm/arm_actuators.xml"/>
+    <include file="arm_actuators.xml"/>
   </actuator>
 </mujoco>

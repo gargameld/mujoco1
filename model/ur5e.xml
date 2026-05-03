@@ -1,4 +1,5 @@
-  <compiler angle="radian" meshdir="assets" autolimits="true"/>
+<mujocoinclude>
+  <compiler angle="radian" meshdir="meshes" autolimits="true"/>
 
   <option integrator="implicitfast"/>
 
@@ -57,7 +58,7 @@
     <mesh file="wrist3.obj"/>
   </asset>
 
-  <body>
+  <worldbody>
     <light name="spotlight" mode="targetbodycom" target="wrist_2_link" pos="0 -1 2"/>
     <body name="base" quat="0 0 0 -1" childclass="ur5e">
       <inertial mass="4.0" pos="0 0 0" diaginertia="0.00443333156 0.00443333156 0.0072"/>
@@ -117,7 +118,7 @@
         </body>
       </body>
     </body>
-  </body>
+  </worldbody>
 
   <actuator>
     <general class="size3" name="shoulder_pan" joint="shoulder_pan_joint"/>
@@ -131,4 +132,4 @@
   <keyframe>
     <key name="home" qpos="-1.5708 -1.5708 1.5708 -1.5708 -1.5708 0" ctrl="-1.5708 -1.5708 1.5708 -1.5708 -1.5708 0"/>
   </keyframe>
-
+</mujocoinclude>
