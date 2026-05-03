@@ -1,7 +1,8 @@
 <mujoco>
   <option timestep="0.0005"/>
   <asset>
-    <texture name="skybox" type="skybox" builtin="gradient" rgb1="1 0 0" rgb2="0 1 0" width="512" height="512"/>
+    <texture name="skybox" type="skybox" builtin="gradient" rgb1="0.62 0.78 0.95" rgb2="0.93 0.97 1" width="512" height="512"/>
+    <texture name="tex_floor_grid" type="2d" builtin="checker" rgb1="0.72 0.76 0.78" rgb2="0.42 0.46 0.48" width="512" height="512"/>
 
     <texture name="tex_black" builtin="flat" height="32" width="32" rgb1="0 0 0" type="2d"/>
     <texture name="tex_magenta" builtin="flat" height="32" width="32" rgb1="1 0 1" type="2d"/>
@@ -12,6 +13,7 @@
     <material name="mat_magenta" texture="tex_magenta"/>
     <material name="mat_red" texture="tex_red"/>
     <material name="mat_blue" texture="tex_blue"/>
+    <material name="mat_floor_grid" texture="tex_floor_grid" texrepeat="24 24" reflectance="0.28" specular="0.35" shininess="0.45"/>
   </asset>
   <default>
     <geom solimp=".9 .95 .001" solref=".02 1"/>
@@ -20,15 +22,33 @@
   <include file="robot.xml"/>
 
   <worldbody>
-    <light diffuse=".5 .5 .5"/>
-    <geom type="plane" size="100 100 0.1" pos="0 0 0"/>
+    <light pos="0 -3 6" dir="0 0 -1" diffuse="0.7 0.7 0.7" specular="0.25 0.25 0.25"/>
+    <geom type="plane" size="100 100 0.1" pos="0 0 0" material="mat_floor_grid"/>
 
     <body name="quoridor" pos="0 4 0">
-      <geom type="box" size="0.05 2 0.5" pos="-2.5 2 0.5" material="mat_black"/>
-      <geom type="box" size="0.05 2 0.5" pos="-2.5 -2 0.5" material="mat_magenta"/>
+      <!-- Black wall, centered hole at z=0.25. -->
+      <geom type="box" size="0.05 0.875 0.5" pos="-2.5 0.875 0.5" material="mat_black"/>
+      <geom type="box" size="0.05 0.875 0.5" pos="-2.5 3.125 0.5" material="mat_black"/>
+      <geom type="box" size="0.05 0.25 0.035" pos="-2.5 2 0.035" material="mat_black"/>
+      <geom type="box" size="0.05 0.25 0.285" pos="-2.5 2 0.715" material="mat_black"/>
 
-      <geom type="box" size="0.05 2 0.5" pos="2.5 2 0.5" material="mat_red"/>
-      <geom type="box" size="0.05 2 0.5" pos="2.5 -2 0.5" material="mat_blue"/>
+      <!-- Magenta wall, centered hole at z=0.40. -->
+      <geom type="box" size="0.05 0.875 0.5" pos="-2.5 -3.125 0.5" material="mat_magenta"/>
+      <geom type="box" size="0.05 0.875 0.5" pos="-2.5 -0.875 0.5" material="mat_magenta"/>
+      <geom type="box" size="0.05 0.25 0.11" pos="-2.5 -2 0.11" material="mat_magenta"/>
+      <geom type="box" size="0.05 0.25 0.21" pos="-2.5 -2 0.79" material="mat_magenta"/>
+
+      <!-- Red wall, centered hole at z=0.55. -->
+      <geom type="box" size="0.05 0.875 0.5" pos="2.5 0.875 0.5" material="mat_red"/>
+      <geom type="box" size="0.05 0.875 0.5" pos="2.5 3.125 0.5" material="mat_red"/>
+      <geom type="box" size="0.05 0.25 0.185" pos="2.5 2 0.185" material="mat_red"/>
+      <geom type="box" size="0.05 0.25 0.135" pos="2.5 2 0.865" material="mat_red"/>
+
+      <!-- Blue wall, centered hole at z=0.70. -->
+      <geom type="box" size="0.05 0.875 0.5" pos="2.5 -3.125 0.5" material="mat_blue"/>
+      <geom type="box" size="0.05 0.875 0.5" pos="2.5 -0.875 0.5" material="mat_blue"/>
+      <geom type="box" size="0.05 0.25 0.26" pos="2.5 -2 0.26" material="mat_blue"/>
+      <geom type="box" size="0.05 0.25 0.06" pos="2.5 -2 0.94" material="mat_blue"/>
       <geom type="box" size="2.5 0.05 0.5" pos="0 4 0.5"/>
     </body>
 
