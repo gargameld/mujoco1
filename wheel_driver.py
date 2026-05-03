@@ -35,7 +35,7 @@ class WheelController:
         front_left = forward + right - rotate
         rear_right = forward + right + rotate
         rear_left = forward - right + rotate
-        max_command = max(abs(front_right), abs(front_left), abs(rear_right), abs(rear_left))
+        max_command = max(abs(front_right), abs(front_left), abs(rear_right), abs(rear_left) , self.max_ctrl)
 
         self.set_wheel_ctrls(
             self.max_ctrl * front_right / max_command,
