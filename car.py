@@ -4,6 +4,8 @@ import os
 import time
 
 from arm_pid_controller import ArmPidController
+from robot_pose_provider import RobotPoseProvider
+from wheel_controller import WheelController
 
 curr_dir_path = os.path.dirname(__file__)
 xml_path = os.path.join(curr_dir_path, 'scene.xml')
@@ -11,13 +13,9 @@ xml_path = os.path.join(curr_dir_path, 'scene.xml')
 model = mujoco.MjModel.from_xml_path(xml_path)
 data = mujoco.MjData(model)
 
-# Motor indices (based on names in XML)
-motor_fr = model.actuator("motor_fr").id
-motor_fl = model.actuator("motor_fl").id
-motor_rr = model.actuator("motor_rr").id
-motor_rl = model.actuator("motor_rl").id
-
 arm_controller = ArmPidController(model, data)
+robot_pose_provider = RobotPoseProvider(model, data)
+wheel_controller = WheelController(model, data, robot_pose_provider)
 selected_arm_joint = 0
 
 
@@ -42,21 +40,39 @@ def key_callback(keycode):
     elif key == "0":
         arm_controller.reset_targets_to_measured_pose()
         print("Arm targets reset to current pose")
+    elif key == "w":
+        wheel_controller.move_forward(1.0)
+        print("Wheel command: move forward 1 meter")
+    elif key == "s":
+        wheel_controller.move_backward(1.0)
+        print("Wheel command: move backward 1 meter")
+    elif key == "d":
+        wheel_controller.strafe_right(1.0)
+        print("Wheel command: strafe right 1 meter")
+    elif key == "a":
+        wheel_controller.strafe_left(1.0)
+        print("Wheel command: strafe left 1 meter")
+    elif key == "q":
+        wheel_controller.rotate(1.5708)
+        print("Wheel command: rotate left 90 degrees")
+    elif key == "e":
+        wheel_controller.rotate(-1.5708)
+        print("Wheel command: rotate right 90 degrees")
+    elif key == "x":
+        wheel_controller.stop()
+        print("Wheel command stopped")
 
 
-print("Arm controls: 1-7 select joint, f and g move selected joint, 0 resets targets.")
+print(
+    "Arm controls: 1-7 select joint, f and g move selected joint, 0 resets targets. "
+    "Wheel controls: w/s/a/d move 1m, q/e rotate 90deg, x stop."
+)
 
 with mujoco.viewer.launch_passive(model, data, key_callback=key_callback) as viewer:
     while viewer.is_running():
         step_start = time.time()
 
-        # --- SIDEWAYS RIGHT MOVEMENT ---
-        torque = 0.00  # adjust strength if needed
-
-        data.ctrl[motor_fr] =  torque
-        data.ctrl[motor_fl] = -torque
-        data.ctrl[motor_rr] = -torque
-        data.ctrl[motor_rl] =  torque
+        wheel_controller.step()
         arm_controller.step()
 
         # Step physics
