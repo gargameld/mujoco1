@@ -5,7 +5,7 @@ import time
 
 from arm_pid_controller import ArmPidController
 from robot_pose_provider import RobotPoseProvider
-from wheel_controller import WheelController
+from wheel_driver import WheelController
 
 curr_dir_path = os.path.dirname(__file__)
 xml_path = os.path.join(curr_dir_path, 'scene.xml')
@@ -40,27 +40,7 @@ def key_callback(keycode):
     elif key == "0":
         arm_controller.reset_targets_to_measured_pose()
         print("Arm targets reset to current pose")
-    elif key == "w":
-        wheel_controller.move_forward(1.0)
-        print("Wheel command: move forward 1 meter")
-    elif key == "s":
-        wheel_controller.move_backward(1.0)
-        print("Wheel command: move backward 1 meter")
-    elif key == "d":
-        wheel_controller.strafe_right(1.0)
-        print("Wheel command: strafe right 1 meter")
-    elif key == "a":
-        wheel_controller.strafe_left(1.0)
-        print("Wheel command: strafe left 1 meter")
-    elif key == "q":
-        wheel_controller.rotate(1.5708)
-        print("Wheel command: rotate left 90 degrees")
-    elif key == "e":
-        wheel_controller.rotate(-1.5708)
-        print("Wheel command: rotate right 90 degrees")
-    elif key == "x":
-        wheel_controller.stop()
-        print("Wheel command stopped")
+    
 
 
 print(
@@ -72,7 +52,6 @@ with mujoco.viewer.launch_passive(model, data, key_callback=key_callback) as vie
     while viewer.is_running():
         step_start = time.time()
 
-        wheel_controller.step()
         arm_controller.step()
 
         # Step physics
