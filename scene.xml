@@ -14,6 +14,31 @@
     <material name="mat_red" texture="tex_red"/>
     <material name="mat_blue" texture="tex_blue"/>
     <material name="mat_floor_grid" texture="tex_floor_grid" texrepeat="24 24" reflectance="0.28" specular="0.35" shininess="0.45"/>
+    <material name="arm_black" rgba="0.033 0.033 0.033 1" specular="0.5" shininess="0.25"/>
+    <material name="arm_jointgray" rgba="0.278 0.278 0.278 1" specular="0.5" shininess="0.25"/>
+    <material name="arm_linkgray" rgba="0.82 0.82 0.82 1" specular="0.5" shininess="0.25"/>
+    <material name="arm_urblue" rgba="0.49 0.678 0.8 1" specular="0.5" shininess="0.25"/>
+
+    <mesh name="base_0" file="arm/assets/base_0.obj"/>
+    <mesh name="base_1" file="arm/assets/base_1.obj"/>
+    <mesh name="shoulder_0" file="arm/assets/shoulder_0.obj"/>
+    <mesh name="shoulder_1" file="arm/assets/shoulder_1.obj"/>
+    <mesh name="shoulder_2" file="arm/assets/shoulder_2.obj"/>
+    <mesh name="upperarm_0" file="arm/assets/upperarm_0.obj"/>
+    <mesh name="upperarm_1" file="arm/assets/upperarm_1.obj"/>
+    <mesh name="upperarm_2" file="arm/assets/upperarm_2.obj"/>
+    <mesh name="upperarm_3" file="arm/assets/upperarm_3.obj"/>
+    <mesh name="forearm_0" file="arm/assets/forearm_0.obj"/>
+    <mesh name="forearm_1" file="arm/assets/forearm_1.obj"/>
+    <mesh name="forearm_2" file="arm/assets/forearm_2.obj"/>
+    <mesh name="forearm_3" file="arm/assets/forearm_3.obj"/>
+    <mesh name="wrist1_0" file="arm/assets/wrist1_0.obj"/>
+    <mesh name="wrist1_1" file="arm/assets/wrist1_1.obj"/>
+    <mesh name="wrist1_2" file="arm/assets/wrist1_2.obj"/>
+    <mesh name="wrist2_0" file="arm/assets/wrist2_0.obj"/>
+    <mesh name="wrist2_1" file="arm/assets/wrist2_1.obj"/>
+    <mesh name="wrist2_2" file="arm/assets/wrist2_2.obj"/>
+    <mesh name="wrist3" file="arm/assets/wrist3.obj"/>
   </asset>
   <default>
     <geom solimp=".9 .95 .001" solref=".02 1"/>
