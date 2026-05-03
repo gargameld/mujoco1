@@ -3,7 +3,7 @@
     <light diffuse=".5 .5 .5"/>
     <geom type="plane" size="2 2 0.01" pos="0 0 0"/>
 
-    <body name="chassis" pos="0 0 1" euler="0 0 0">
+    <body name="chassis" pos="0 0 0.26" euler="0 0 0">
       <freejoint/> 
       <body name = "arm">
         <include file="arm/mounted_arm.xml"/>
@@ -38,5 +38,6 @@
     <motor name="motor_fl" joint="R1_fl_wheel_rolling_joint" gear="50"/>
     <motor name="motor_rr" joint="R1_rr_wheel_rolling_joint" gear="50"/>
     <motor name="motor_rl" joint="R1_rl_wheel_rolling_joint" gear="50"/>
+    <include file="arm/arm_actuators.xml"/>
   </actuator>
 </mujoco>

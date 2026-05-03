@@ -10,8 +10,7 @@
         forcerange="-150 150"/>
       <default class="size3">
         <default class="size3_limited">
-          <joint range="-3.1415 3.1415"/>
-          <general ctrlrange="-3.1415 3.1415"/>
+          <joint/>
         </default>
       </default>
       <default class="size1">
