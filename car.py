@@ -7,6 +7,7 @@ from arm_pid_controller import ArmPidController
 from rangefinder import RangefinderReader
 from robot_pose_provider import RobotPoseProvider
 from wheel_driver import WheelController
+from motion_controler import MotionController
 
 curr_dir_path = os.path.dirname(__file__)
 xml_path = os.path.join(curr_dir_path, 'model', 'scene.xml')
@@ -72,26 +73,32 @@ print(
 )
 
 direction = 1
+last_pose_print_time = time.time()
+motion_controller = MotionController(wheel_controller=wheel_controller, pose_provider=robot_pose_provider)
+motion_controller.set_target_y_vel(0.6)
+motion_controller.set_target_x_vel(0.2)
+motion_controller.set_target_yaw_rate(1)
 
 with mujoco.viewer.launch_passive(model, data, key_callback=key_callback) as viewer:
     while viewer.is_running():
         step_start = time.time()
 
-        arm_controller.step()
+        
 
         # Step physics
         mujoco.mj_step(model, data)
+        if(time.time() - last_pose_print_time > 7):
+            motion_controller.set_target_y_vel(-0.6)
+            last_pose_print_time = time.time()
 
-        if step_start - last_rangefinder_print >= 5.0:
-            print_rangefinder_distances()
-            last_rangefinder_print = step_start
-        
         if too_close(rangefinder_reader.distances()):
             wheel_controller.stop()
         else:
-            wheel_controller.drive(forward= 0.5 * direction)
+            wheel_controller.drive(forward= 0.5 * direction,rotate=-robot_pose_provider.pose()["yaw"] )
 
         viewer.sync()
+        arm_controller.step()
+        motion_controller.step()
 
         time_until_next_step = model.opt.timestep - (time.time() - step_start)
         if time_until_next_step > 0:
