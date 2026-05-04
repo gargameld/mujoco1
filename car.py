@@ -75,9 +75,7 @@ print(
 direction = 1
 last_pose_print_time = time.time()
 motion_controller = MotionController(wheel_controller=wheel_controller, pose_provider=robot_pose_provider)
-motion_controller.set_target_y_vel(0.6)
-motion_controller.set_target_x_vel(0.2)
-motion_controller.set_target_yaw_rate(1)
+motion_controller.move_to_pose(1.0, -2.0, 3.14, 0.7)
 
 with mujoco.viewer.launch_passive(model, data, key_callback=key_callback) as viewer:
     while viewer.is_running():
@@ -87,14 +85,8 @@ with mujoco.viewer.launch_passive(model, data, key_callback=key_callback) as vie
 
         # Step physics
         mujoco.mj_step(model, data)
-        if(time.time() - last_pose_print_time > 7):
-            motion_controller.set_target_y_vel(-0.6)
-            last_pose_print_time = time.time()
 
-        if too_close(rangefinder_reader.distances()):
-            wheel_controller.stop()
-        else:
-            wheel_controller.drive(forward= 0.5 * direction,rotate=-robot_pose_provider.pose()["yaw"] )
+        
 
         viewer.sync()
         arm_controller.step()
