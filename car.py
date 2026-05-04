@@ -75,7 +75,7 @@ print(
 direction = 1
 last_pose_print_time = time.time()
 motion_controller = MotionController(wheel_controller=wheel_controller, pose_provider=robot_pose_provider)
-motion_controller.move_to_pose(1.0, -2.0, 3.14, 0.7)
+motion_controller.move_to_pose(-1.0, 5.0, 3.14, 3, False)
 
 with mujoco.viewer.launch_passive(model, data, key_callback=key_callback) as viewer:
     while viewer.is_running():
