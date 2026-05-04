@@ -1,5 +1,6 @@
 import mujoco
 import mujoco.viewer
+import math
 import os
 import time
 
@@ -8,6 +9,8 @@ from rangefinder import RangefinderReader
 from robot_pose_provider import RobotPoseProvider
 from wheel_driver import WheelController
 from motion_controler import MotionController
+from path_planner import PathPlanner
+from path_listener import PathListener
 
 curr_dir_path = os.path.dirname(__file__)
 xml_path = os.path.join(curr_dir_path, 'model', 'scene.xml')
@@ -21,6 +24,39 @@ wheel_controller = WheelController(model, data)
 rangefinder_reader = RangefinderReader(model, data)
 selected_arm_joint = 0
 last_rangefinder_print = 0.0
+PATH_STEP_DISTANCE = 0.2
+PATH_YAW = 0.0
+
+
+def build_dense_path(anchor_poses, step_distance):
+    dense_path = []
+
+    for index, anchor_pose in enumerate(anchor_poses):
+        if index == 0:
+            dense_path.append(anchor_pose)
+            continue
+
+        previous_pose = anchor_poses[index - 1]
+        x_distance = anchor_pose["x"] - previous_pose["x"]
+        y_distance = anchor_pose["y"] - previous_pose["y"]
+        distance = math.sqrt(x_distance * x_distance + y_distance * y_distance)
+        steps = max(1, math.ceil(distance / step_distance))
+
+        for step in range(1, steps + 1):
+            ratio = step / steps
+            dense_pose = {
+                "x": previous_pose["x"] + x_distance * ratio,
+                "y": previous_pose["y"] + y_distance * ratio,
+                "yaw": anchor_pose.get("yaw", PATH_YAW),
+                "speed": anchor_pose.get("speed"),
+            }
+
+            if index == len(anchor_poses) - 1 and step == steps:
+                dense_pose["allow_overshoot"] = False
+
+            dense_path.append(dense_pose)
+
+    return dense_path
 
 def too_close(ranges):
     min_front = 0.18
@@ -75,7 +111,30 @@ print(
 direction = 1
 last_pose_print_time = time.time()
 motion_controller = MotionController(wheel_controller=wheel_controller, pose_provider=robot_pose_provider)
-motion_controller.move_to_pose(-1.0, 5.0, 3.14, 3, False)
+
+parking_anchor_poses = [
+    {"x": 0.0, "y": 0.0, "yaw": PATH_YAW, "speed": 1.5},
+    {"x": 1.2, "y": -7.0, "yaw": PATH_YAW, "speed": 1.5},
+    {"x": 3.5, "y": -7.0, "yaw": PATH_YAW, "speed": 0.8},
+    {"x": 1.2, "y": -7.0, "yaw": PATH_YAW, "speed": 0.8},
+    {"x": 1.2, "y": -5.0, "yaw": PATH_YAW, "speed": 1.5},
+    {"x": 3.5, "y": -5.0, "yaw": PATH_YAW, "speed": 0.8},
+    {"x": 1.2, "y": -5.0, "yaw": PATH_YAW, "speed": 0.8},
+    {"x": 1.2, "y": -3.0, "yaw": PATH_YAW, "speed": 1.5},
+    {"x": 3.5, "y": -3.0, "yaw": PATH_YAW, "speed": 0.8},
+    {"x": 1.2, "y": -3.0, "yaw": PATH_YAW, "speed": 0.8},
+    {"x": 1.2, "y": -1.0, "yaw": PATH_YAW, "speed": 1.5},
+    {"x": 3.5, "y": -1.0, "yaw": PATH_YAW, "speed": 0.8},
+]
+parking_path = PathPlanner(
+    build_dense_path(parking_anchor_poses, PATH_STEP_DISTANCE)
+)
+path_listener = PathListener(
+    motion_controller=motion_controller,
+    path_planner=parking_path,
+    default_speed=1.0,
+)
+path_listener.start()
 
 with mujoco.viewer.launch_passive(model, data, key_callback=key_callback) as viewer:
     while viewer.is_running():
@@ -90,7 +149,7 @@ with mujoco.viewer.launch_passive(model, data, key_callback=key_callback) as vie
 
         viewer.sync()
         arm_controller.step()
-        motion_controller.step()
+        path_listener.step()
 
         time_until_next_step = model.opt.timestep - (time.time() - step_start)
         if time_until_next_step > 0:
